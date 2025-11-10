@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{APP_NAME}} - Board Consent SAFE Signature Request</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f766e 0%, #065f46 100%);
+            padding: 30px 40px;
+            text-align: center;
+        }
+        .logo {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        .tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin: 8px 0 0 0;
+        }
+        .content {
+            padding: 40px;
+            text-align: center;
+        }
+        .title {
+            color: #1a202c;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 16px 0;
+        }
+        .subtitle {
+            color: #4a5568;
+            font-size: 16px;
+            margin: 0 0 32px 0;
+        }
+        .document-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px auto;
+            background: linear-gradient(135deg, #0f766e 0%, #065f46 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        .company-info {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        .company-name {
+            color: #14532d;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+        }
+        .company-details {
+            color: #166534;
+            font-size: 14px;
+            margin: 0;
+        }
+        .sign-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0f766e 0%, #065f46 100%);
+            color: #ffffff;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 24px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.3);
+        }
+        .sign-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -1px rgba(15, 118, 110, 0.4);
+        }
+        .document-info {
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+            text-align: left;
+        }
+        .document-title {
+            color: #2d3748;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 16px 0;
+            text-align: center;
+        }
+        .document-description {
+            color: #4a5568;
+            font-size: 14px;
+            margin: 0 0 20px 0;
+            line-height: 1.6;
+        }
+        .document-features {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .document-features li {
+            color: #4a5568;
+            font-size: 14px;
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        .expiry-warning {
+            background-color: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+        .expiry-text {
+            color: #92400e;
+            font-size: 14px;
+            margin: 0;
+            font-weight: 500;
+        }
+        .instructions {
+            color: #4a5568;
+            font-size: 15px;
+            margin: 24px 0;
+            line-height: 1.7;
+        }
+        .footer {
+            background-color: #f7fafc;
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        .footer-text {
+            color: #718096;
+            font-size: 14px;
+            margin: 0 0 16px 0;
+        }
+        .contact-info {
+            color: #4a5568;
+            font-size: 13px;
+            margin: 0;
+        }
+        .security-notice {
+            background-color: #ecfdf5;
+            border: 1px solid #86efac;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+        .security-text {
+            color: #166534;
+            font-size: 13px;
+            margin: 0;
+        }
+        
+        /* Mobile responsiveness */
+        @media only screen and (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+            .header, .content, .footer {
+                padding: 24px 20px;
+            }
+            .title {
+                font-size: 20px;
+            }
+            .sign-button {
+                padding: 14px 24px;
+                font-size: 15px;
+            }
+            .document-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+            .document-info {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="logo">{{APP_NAME}}</h1>
+            <p class="tagline">Secure Investment Platform</p>
+        </div>
+        
+        <div class="content">
+            <div class="document-icon">📋</div>
+            
+            <h2 class="title">Board Consent SAFE Signature Required</h2>
+            <p class="subtitle">Hello {{DIRECTOR_NAME}}, your signature is requested for the Board Consent SAFE document</p>
+            
+            <div class="company-info">
+                <p class="company-name">{{COMPANY_NAME}}</p>
+                <p class="company-details">Board Resolution - SAFE Agreement</p>
+            </div>
+            
+            <a href="{{SIGNATURE_URL}}" class="sign-button">
+                Review & Sign Document
+            </a>
+            
+            <div class="document-info">
+                <h3 class="document-title">About Board Consent SAFE</h3>
+                <p class="document-description">
+                    This document represents the board's formal consent to authorize the issuance of 
+                    Simple Agreement for Future Equity (SAFE) instruments to investors.
+                </p>
+                <ul class="document-features">
+                    <li>Authorizes SAFE issuance for fundraising activities</li>
+                    <li>Establishes terms and conditions for equity conversion</li>
+                    <li>Provides legal framework for investor agreements</li>
+                    <li>Ensures compliance with corporate governance requirements</li>
+                </ul>
+            </div>
+            
+            <div class="expiry-warning">
+                <p class="expiry-text">⏰ Important: This signature link expires in 5 minutes and can only be used once for security purposes.</p>
+            </div>
+            
+            <p class="instructions">
+                Please review the document carefully before signing. Your digital signature will be legally binding 
+                and will complete the board resolution process for this SAFE agreement.
+            </p>
+            
+            <div class="security-notice">
+                <p class="security-text">
+                    🔒 This signature request is secured with enterprise-grade encryption. Only authorized board members can access this document.
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p class="footer-text">
+                This is an official document signature request. If you have questions about this document, please contact the company directly.
+            </p>
+            <p class="contact-info">
+                {{APP_NAME}} Platform | {{SUPPORT_EMAIL}}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

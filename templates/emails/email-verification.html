@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{APP_NAME}} - Email Verification</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            padding: 30px 40px;
+            text-align: center;
+        }
+        .logo {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        .tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin: 8px 0 0 0;
+        }
+        .content {
+            padding: 40px;
+            text-align: center;
+        }
+        .title {
+            color: #1a202c;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 16px 0;
+        }
+        .subtitle {
+            color: #4a5568;
+            font-size: 16px;
+            margin: 0 0 32px 0;
+        }
+        .verification-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px auto;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        .verify-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 24px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+        .verify-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -1px rgba(16, 185, 129, 0.4);
+        }
+        .alternative-link {
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 32px 0;
+        }
+        .alternative-title {
+            color: #2d3748;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+        }
+        .alternative-url {
+            color: #4a5568;
+            font-size: 13px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            background-color: #ffffff;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+            margin: 0;
+        }
+        .instructions {
+            color: #4a5568;
+            font-size: 15px;
+            margin: 24px 0;
+            line-height: 1.7;
+        }
+        .footer {
+            background-color: #f7fafc;
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        .footer-text {
+            color: #718096;
+            font-size: 14px;
+            margin: 0 0 16px 0;
+        }
+        .contact-info {
+            color: #4a5568;
+            font-size: 13px;
+            margin: 0;
+        }
+        .security-notice {
+            background-color: #fffbeb;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+        .security-text {
+            color: #92400e;
+            font-size: 13px;
+            margin: 0;
+        }
+        
+        /* Mobile responsiveness */
+        @media only screen and (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+            .header, .content, .footer {
+                padding: 24px 20px;
+            }
+            .title {
+                font-size: 20px;
+            }
+            .verify-button {
+                padding: 14px 24px;
+                font-size: 15px;
+            }
+            .verification-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="logo">{{APP_NAME}}</h1>
+            <p class="tagline">Secure Investment Platform</p>
+        </div>
+        
+        <div class="content">
+            <div class="verification-icon">✉️</div>
+            
+            <h2 class="title">Verify Your Email Address</h2>
+            <p class="subtitle">Click the button below to confirm your email address and complete your account setup</p>
+            
+            <a href="{{VERIFICATION_URL}}" class="verify-button">
+                Verify Email Address
+            </a>
+            
+            <p class="instructions">
+                This link will confirm that this email address belongs to you and activate your {{APP_NAME}} account. 
+                Once verified, you'll have full access to our investment platform.
+            </p>
+            
+            <div class="alternative-link">
+                <p class="alternative-title">Can't click the button? Copy and paste this link:</p>
+                <p class="alternative-url">{{VERIFICATION_URL}}</p>
+            </div>
+            
+            <div class="security-notice">
+                <p class="security-text">
+                    🔒 This verification link is unique to your account and expires after use. If you didn't create a {{APP_NAME}} account, you can safely ignore this email.
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p class="footer-text">
+                If you're having trouble with email verification, please contact our support team for assistance.
+            </p>
+            <p class="contact-info">
+                {{APP_NAME}} Support | {{SUPPORT_EMAIL}}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

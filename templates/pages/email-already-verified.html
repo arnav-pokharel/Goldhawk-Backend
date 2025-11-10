@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Already Verified - {{APP_NAME}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 48px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #1e40af, #1d4ed8);
+        }
+        
+        .info-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            border: 3px solid #93c5fd;
+        }
+        
+        .logo {
+            color: #3b82f6;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 32px;
+            letter-spacing: -0.5px;
+        }
+        
+        h1 {
+            color: #1e40af;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        
+        .info-message {
+            color: #4b5563;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        
+        .status-card {
+            background: #eff6ff;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .status-title {
+            color: #1e40af;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .status-text {
+            color: #1e40af;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .action-buttons {
+            margin-top: 32px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 0 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -1px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-1px);
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .info-icon {
+                width: 64px;
+                height: 64px;
+                font-size: 28px;
+            }
+            
+            .btn {
+                display: block;
+                margin: 8px 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">{{APP_NAME}}</div>
+        
+        <div class="info-icon">ℹ️</div>
+        
+        <h1>Email Already Verified</h1>
+        <p class="info-message">Good news! Your email address has already been verified and your account is active.</p>
+        
+        <div class="status-card">
+            <div class="status-title">Account Status: Verified ✅</div>
+            <div class="status-text">Your email verification was completed earlier. You can proceed to use all platform features.</div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{{DASHBOARD_URL}}" class="btn btn-primary">Go to Dashboard</a>
+            <a href="{{LOGIN_URL}}" class="btn btn-secondary">Sign In</a>
+        </div>
+        
+        <div class="footer">
+            You can safely close this window or continue to your dashboard.
+        </div>
+    </div>
+</body>
+</html>

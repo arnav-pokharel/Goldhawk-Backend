@@ -1,0 +1,874 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model access_be {
+  id                  BigInt           @id @default(autoincrement())
+  uid                 String           @db.Uuid
+  provider            be_provider_enum
+  provider_account_id String?
+  authorized          Boolean          @default(false)
+  access_token        String?
+  comment             String?
+  created_at          DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime         @default(now()) @db.Timestamptz(6)
+  founders            founders         @relation(fields: [uid], references: [uid], onDelete: Cascade)
+
+  @@unique([uid, provider], map: "uq_access_be")
+  @@index([uid], map: "idx_access_be_uid")
+}
+
+model access_cicd {
+  id                  BigInt             @id @default(autoincrement())
+  uid                 String             @db.Uuid
+  provider            cicd_provider_enum
+  provider_account_id String?
+  authorized          Boolean            @default(false)
+  access_token        String?
+  comment             String?
+  created_at          DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime           @default(now()) @db.Timestamptz(6)
+  founders            founders           @relation(fields: [uid], references: [uid], onDelete: Cascade)
+
+  @@unique([uid, provider], map: "uq_access_cicd")
+  @@index([uid], map: "idx_access_cicd_uid")
+}
+
+model access_db {
+  id             BigInt           @id @default(autoincrement())
+  uid            String           @db.Uuid
+  provider       db_provider_enum
+  connection_uri String?
+  authorized     Boolean          @default(false)
+  access_token   String?
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime         @default(now()) @db.Timestamptz(6)
+  founders       founders         @relation(fields: [uid], references: [uid], onDelete: Cascade)
+
+  @@unique([uid, provider], map: "uq_access_db")
+  @@index([uid], map: "idx_access_db_uid")
+}
+
+model access_fe {
+  id                  BigInt           @id @default(autoincrement())
+  uid                 String           @db.Uuid
+  provider            fe_provider_enum
+  provider_account_id String?
+  authorized          Boolean          @default(false)
+  access_token        String?
+  comment             String?
+  created_at          DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime         @default(now()) @db.Timestamptz(6)
+  founders            founders         @relation(fields: [uid], references: [uid], onDelete: Cascade)
+
+  @@unique([uid, provider], map: "uq_access_fe")
+  @@index([uid], map: "idx_access_fe_uid")
+}
+
+model access_ff {
+  id          BigInt   @id @default(autoincrement())
+  uid         String   @db.Uuid
+  description String
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+  founders    founders @relation(fields: [uid], references: [uid], onDelete: Cascade)
+
+  @@index([uid], map: "idx_access_ff_uid")
+}
+
+model access_sc {
+  id                  BigInt           @id @default(autoincrement())
+  uid                 String           @db.Uuid
+  provider            sc_provider_enum
+  provider_account_id String?
+  authorized          Boolean          @default(false)
+  access_token        String?
+  scopes              String?
+  created_at          DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime         @default(now()) @db.Timestamptz(6)
+  founders            founders         @relation(fields: [uid], references: [uid], onDelete: Cascade)
+
+  @@unique([uid, provider], map: "uq_access_sc")
+  @@index([uid], map: "idx_access_sc_uid")
+}
+
+model access_up {
+  id          BigInt           @id @default(autoincrement())
+  uid         String           @db.Uuid
+  file_type   up_filetype_enum
+  file_url    String
+  uploaded_at DateTime         @default(now()) @db.Timestamptz(6)
+  founders    founders         @relation(fields: [uid], references: [uid], onDelete: Cascade)
+
+  @@index([uid], map: "idx_access_up_uid")
+  @@index([uid, file_type], map: "idx_access_up_uid_type")
+}
+
+model admin_message {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  founder_uid String    @db.Uuid
+  sender      String    @db.VarChar(20)
+  content     String
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  founders    founders  @relation(fields: [founder_uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([founder_uid], map: "idx_admin_message_founder")
+}
+
+model ai_validate {
+  uid        String    @id @db.Uuid
+  tech_stack Json      @default("[]")
+  bus_stack  Json      @default("[]")
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  founders   founders  @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model all_account {
+  account_number BigInt @id
+  uid            String @db.Uuid
+  type           String @db.VarChar(50)
+  name           String @db.VarChar(255)
+
+  @@unique([uid, type], map: "uq_all_account_uid_type")
+}
+
+model angel_funds {
+  uid         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fund_amount Boolean?
+  checked_at  String?
+}
+
+model angel_investor {
+  uid                   String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                 String     @unique @db.VarChar(255)
+  password              String
+  angel_name            String?    @db.VarChar(255)
+  created_at            DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime?  @default(now()) @db.Timestamptz(6)
+  otp                   String?    @db.VarChar(10)
+  is_verified           Boolean?   @default(false)
+  number                Int?
+  dob                   DateTime?  @db.Date
+  address               String?
+  nationality           String?
+  number_verify         Boolean?   @default(false)
+  step1                 Boolean?   @default(false)
+  kyc_validation        Boolean?   @default(false)
+  fund_validation       Boolean?   @default(false)
+  bg_check              Boolean?   @default(false)
+  profile_picture       String?
+  acc_no                String?
+  bio                   String?
+  total_investment      String?
+  total_amount_invested String?
+  messages              messages[]
+}
+
+model angel_sessions {
+  id          String      @id
+  userId      String
+  token       String      @unique
+  expiresAt   DateTime
+  createdAt   DateTime    @default(now())
+  angel_users angel_users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model angel_stats {
+  uid              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accreditation    Boolean?
+  net_worth        String?
+  annual_income    String?
+  investing_exp    String?
+  preferred_size   String?
+  preferred_range  String?
+  risk             String?
+  preferred_stage  String?
+  preferred_sector String?
+  motiv            String?
+}
+
+model angel_users {
+  id                                               String           @id
+  email                                            String           @unique
+  password                                         String
+  createdAt                                        DateTime         @default(now())
+  updatedAt                                        DateTime
+  role                                             String           @default("user")
+  isVerified                                       Boolean          @default(false)
+  vcFirmId                                         String?
+  angel_sessions                                   angel_sessions[]
+  vc_firms                                         vc_firms?        @relation(fields: [vcFirmId], references: [id])
+  otps                                             otps?
+  vc_onboard_1                                     vc_onboard_1?
+  vc_onboard_2                                     vc_onboard_2?
+  vc_partners_vc_partners_angelUserIdToangel_users vc_partners[]    @relation("vc_partners_angelUserIdToangel_users")
+  vc_partners_vc_partners_partner_uidToangel_users vc_partners[]    @relation("vc_partners_partner_uidToangel_users")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model calls {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deal_id    String    @db.Uuid
+  caller_uid String    @db.Uuid
+  callee_uid String    @db.Uuid
+  status     String?   @default("ringing")
+  started_at DateTime? @default(now()) @db.Timestamptz(6)
+  ended_at   DateTime? @db.Timestamptz(6)
+}
+
+model chat {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deal_id        String?  @db.Uuid
+  sender_uid     String   @db.Uuid
+  sender_name    String?
+  message        String
+  created_at     DateTime @default(now()) @db.Timestamp(6)
+  read           Boolean  @default(false)
+  attachment_url String?
+
+  @@index([deal_id, created_at(sort: Desc)], map: "idx_chat_deal_time")
+}
+
+model deal {
+  deal_id        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  doc_id         String           @unique @db.Uuid
+  investor_uid   String           @db.Uuid
+  startup_uid    String           @db.Uuid
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime         @default(now()) @db.Timestamptz(6)
+  inv_type       String?
+  chat           String?
+  status         String?
+  meeting_log    String?
+  meeting        String?
+  action         Json?            @db.Json
+  deal_no        String?
+  fund_type      String?
+  deal_termsheet deal_termsheet[]
+  legals         legals[]
+  meeting_logs   meeting_logs[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model deal_note {
+  NOTE_TOTAL_AUTHORIZED          BigInt?
+  DATE_MATURITY                  DateTime? @db.Date
+  INTEREST_RATE                  Int?
+  QUALIFIED_FINANCING_THRESHOLD  BigInt?
+  CONVERSION_DISCOUNT_PERCENT    Int?
+  VALUATION_CAP                  BigInt?
+  NOTE_PRO_RATA_ENABLED          Boolean?
+  NOTE_MFN_ENABLED               Boolean?
+  AMENDMENT_MAJORITY_THRESHOLD   Int?
+  created_at                     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at                     DateTime  @default(now()) @db.Timestamptz(6)
+  board_consent_notes            Json?
+  convertible_notes              Json?
+  mfn_agreement_notes            Json?
+  pro_rata_rights_agreement_note Json?
+  termsheet_notes                Json?
+  version                        Int?
+  lock_termsheet                 Boolean?
+  deal_id                        String?   @db.Uuid
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model deal_safe {
+  deal_id                   String?   @db.Uuid
+  SAFE_FORM                 String?
+  POST_MONEY_VALUATION      Int?
+  DISCOUNT_RATE             Int?
+  SAFE_FORM_FLEX            Boolean?
+  PRO_RATA_ENABLED          Boolean?
+  SAFE_TOTAL_AUTHORIZED     Int?
+  board_consent_safe        Json?     @db.Json
+  discount_safe             Json?     @db.Json
+  pro_rata_side_letter_safe Json?     @db.Json
+  mfn_safe                  Json?     @db.Json
+  valuation_cap_safe        Json?     @db.Json
+  created_at                DateTime? @db.Timestamptz(6)
+  termsheet                 Json?
+  version                   Int?
+  lock_termsheet            Boolean?
+
+  @@ignore
+}
+
+model deal_termsheet {
+  deal_id        String?   @db.Uuid
+  version        Int?      @default(1)
+  proposed_by    String?   @db.VarChar(50)
+  status         String?   @db.VarChar(50)
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+  type           String?
+  safe           Json?
+  notes          Json?
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lock_termsheet Boolean?
+  deal           deal?     @relation(fields: [deal_id], references: [deal_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model dev_validate {
+  access_sc   Boolean?  @default(false)
+  access_cicd Boolean?  @default(false)
+  access_db   Boolean?  @default(false)
+  access_fe   Boolean?  @default(false)
+  access_be   Boolean?  @default(false)
+  access_ff   Boolean?  @default(false)
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  updated_at  DateTime? @default(now()) @db.Timestamp(6)
+  key_point   String?
+
+  @@ignore
+}
+
+model draft_signatures {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  uid            String    @db.Uuid
+  role           String
+  signer_name    String?
+  signer_title   String?
+  signer_address String?
+  signature      String?
+  signed_at      DateTime? @db.Timestamptz(6)
+
+  @@unique([uid, role])
+}
+
+model founder_documents {
+  id         String    @id(map: "founder_document_pkey") @db.Uuid
+  uid        String?   @db.Uuid
+  doc_index  Int?
+  doc_name   String?
+  doc_type   String?
+  doc_link   String?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  founders   founders? @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction, map: "founder_document_uid_fkey")
+}
+
+model founder_id_verification {
+  uid                    String    @db.Uuid
+  founder_index          Int
+  founder_name           String?   @db.VarChar
+  persona_inquiry_id     String?   @unique(map: "founder_verification_persona_inquiry_id_key") @db.VarChar
+  verification_url       String?   @db.VarChar
+  verification_status    String?   @db.VarChar
+  review_reason          String?   @db.VarChar
+  created_at             DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime? @default(now()) @db.Timestamptz(6)
+  founder_email          String?
+  email_verified         Boolean?
+  email_verify_link      String?
+  profile_picture        String?
+  persona_inquiry_status String?
+  private_url            String?
+  founders               founders  @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction, map: "founder_verification_uid_fkey")
+
+  @@id([uid, founder_index], map: "founder_verification_pkey")
+}
+
+model founder_legals {
+  id         String    @id @db.Uuid
+  uid        String?   @db.Uuid
+  equity     Boolean?  @default(false)
+  equity_ref String?   @db.Uuid
+  safe       Boolean?  @default(false)
+  safe_ref   String?   @db.Uuid
+  notes      Boolean?  @default(false)
+  notes_ref  String?   @db.Uuid
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  founders   founders? @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model founder_note {
+  id                             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  uid                            String    @unique(map: "uq_founder_note_uid") @db.Uuid
+  NOTE_TOTAL_AUTHORIZED          BigInt?
+  DATE_MATURITY                  DateTime? @db.Date
+  INTEREST_RATE                  Int?
+  QUALIFIED_FINANCING_THRESHOLD  BigInt?
+  CONVERSION_DISCOUNT_PERCENT    Int?
+  VALUATION_CAP                  BigInt?
+  NOTE_PRO_RATA_ENABLED          Boolean?
+  NOTE_MFN_ENABLED               Boolean?
+  AMENDMENT_MAJORITY_THRESHOLD   Int?
+  created_at                     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at                     DateTime  @default(now()) @db.Timestamptz(6)
+  board_consent_notes            Json?
+  convertible_notes              Json?
+  mfn_agreement_notes            Json?
+  pro_rata_rights_agreement_note Json?
+  termsheet_notes                Json?
+  founders                       founders  @relation(fields: [uid], references: [uid], onDelete: Cascade)
+
+  @@index([uid], map: "idx_founder_note_uid")
+}
+
+model founder_safe {
+  id                        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  uid                       String   @unique(map: "uq_founder_safe_uid") @db.Uuid
+  SAFE_FORM                 String?
+  POST_MONEY_VALUATION      BigInt?
+  DISCOUNT_RATE             Int?
+  SAFE_FORM_FLEX            Boolean?
+  PRO_RATA_ENABLED          Boolean?
+  created_at                DateTime @default(now()) @db.Timestamptz(6)
+  updated_at                DateTime @default(now()) @db.Timestamptz(6)
+  SAFE_TOTAL_AUTHORIZED     BigInt?
+  board_consent_safe        Json?
+  discount_safe             Json?
+  pro_rata_side_letter_safe Json?
+  mfn_safe                  Json?
+  valuation_cap_safe        Json?
+  term_sheet_safe           Json?
+  safe_total_authorized     BigInt?
+  founders                  founders @relation(fields: [uid], references: [uid], onDelete: Cascade)
+
+  @@index([uid], map: "idx_founder_safe_uid")
+}
+
+model founder_step1 {
+  id                String    @id @db.Uuid
+  uid               String?   @db.Uuid
+  founder_index     Int?
+  founder_full_name String?
+  founder_title     String?
+  founder_email     String?
+  founder_number    String?
+  founder_address   String?
+  founder_picture   String?
+  founder_education String?
+  founder_bio       String?
+  created_at        DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime? @default(now()) @db.Timestamptz(6)
+  founder_city      String?
+  founder_state     String?
+  founder_country   String?
+  founder_zip       String?
+  founder_linkedin  String?
+  founders          founders? @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model founder_step2 {
+  id                         String    @id @db.Uuid
+  uid                        String?   @db.Uuid
+  company_name               String?
+  has_prior_rounds_yn        String?
+  prior_round_count          Int?
+  prior_round_name_n         String[]
+  prior_round_type_n         String[]
+  current_round_name         String?
+  current_round_type         String?
+  created_at                 DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime? @default(now()) @db.Timestamptz(6)
+  company_website            String?
+  company_incorporation_date DateTime? @db.Date
+  company_state_incorporated String?
+  company_industry           String?
+  company_description        String?
+  hq_address                 String?
+  logo_url                   String?
+  metric_1                   String?
+  metric_2                   String?
+  metric_3                   String?
+  metric_4                   String?
+  metric_5                   String?
+  metric_6                   String?
+  metric_7                   String?
+  metric_8                   String?
+  traction                   String?
+  founders                   founders? @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model founder_step3 {
+  id                 String    @id @db.Uuid
+  uid                String?   @db.Uuid
+  pitch_video_1_url  String?
+  pitch_video_2_url  String?
+  pitch_video_3_url  String?
+  pitch_deck_url     String?
+  overview_doc_url   String?
+  pitch_video_1_meta Json?
+  pitch_video_2_meta Json?
+  pitch_video_3_meta Json?
+  pitch_deck_meta    Json?
+  overview_doc_meta  Json?
+  created_at         DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime? @default(now()) @db.Timestamptz(6)
+  pitch_1_des        String?
+  pitch_2_des        String?
+  pitch_3_des        String?
+  other_doc          String?
+  thumb_url          String?
+  founders           founders? @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model founder_validate {
+  id                String    @id @db.Uuid
+  uid               String?   @db.Uuid
+  founder_index     Int?
+  tech_kp           Json?
+  business_kp       Json?
+  tech_access       Boolean?
+  business_access   Boolean?
+  validation_score  Decimal?  @db.Decimal(5, 2)
+  validation_status Boolean?
+  validation_log    Json?
+  validation_report Json?
+  created_at        DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime? @default(now()) @db.Timestamptz(6)
+  verification      Boolean?
+  bg_check          Boolean?
+  date              String?
+  overview_kp       String?
+  tech_dde          String?
+  business_dde      String?
+  ad_tech           Json?     @db.Json
+  ad_business       Json?     @db.Json
+  founders          founders? @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model founder_validation_access {
+  uid           String    @id @db.Uuid
+  access_sc     Json?
+  access_cicd   Json?
+  access_fe     Json?
+  access_be     Json?
+  access_db     Json?
+  access_ff     String?
+  access_up     String?
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime? @default(now()) @db.Timestamptz(6)
+  access_plaid  Json?     @db.Json
+  access_stripe Json?     @db.Json
+  access_qb     Json?     @db.Json
+  founders      founders  @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model founders {
+  uid                       String                     @id @db.Uuid
+  email                     String                     @unique
+  password                  String
+  created_at                DateTime?                  @default(now()) @db.Timestamptz(6)
+  is_verified               Boolean?                   @default(false)
+  step1                     Boolean?                   @default(false)
+  step2                     Boolean?                   @default(false)
+  step3                     Boolean?                   @default(false)
+  validation                Boolean?                   @default(false)
+  founder_verification      Boolean?                   @default(false)
+  background_check          Boolean?                   @default(false)
+  number_verify             Boolean?                   @default(false)
+  updated_at                DateTime?                  @default(now()) @db.Timestamptz(6)
+  otp                       String?                    @db.VarChar(10)
+  otp_expires_at            DateTime?                  @db.Timestamp(6)
+  acc_number                String?
+  venture_req_unread        Int?                       @default(0)
+  access_be                 access_be[]
+  access_cicd               access_cicd[]
+  access_db                 access_db[]
+  access_fe                 access_fe[]
+  access_ff                 access_ff[]
+  access_sc                 access_sc[]
+  access_up                 access_up[]
+  admin_message             admin_message[]
+  ai_validate               ai_validate?
+  founder_documents         founder_documents[]
+  founder_id_verification   founder_id_verification[]
+  founder_legals            founder_legals[]
+  founder_note              founder_note?
+  founder_safe              founder_safe?
+  founder_step1             founder_step1[]
+  founder_step2             founder_step2[]
+  founder_step3             founder_step3[]
+  founder_validate          founder_validate[]
+  founder_validation_access founder_validation_access?
+}
+
+model legals {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deal_id       String?   @db.Uuid
+  document_type String?   @db.VarChar(100)
+  status        String?   @db.VarChar(50)
+  signed_at     DateTime? @db.Timestamptz(6)
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+  deal          deal?     @relation(fields: [deal_id], references: [deal_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model meeting_logs {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deal_id       String    @db.Uuid
+  started_at    DateTime? @default(now()) @db.Timestamp(6)
+  ended_at      DateTime? @db.Timestamp(6)
+  transcript    String?
+  recording_url String?
+  caller_uid    String?   @db.Uuid
+  callee_uid    String?   @db.Uuid
+  status        String?   @default("pending")
+  deal          deal      @relation(fields: [deal_id], references: [deal_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model messages {
+  id             String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  investor_uid   String?         @db.Uuid
+  message        String?
+  sent_at        DateTime?       @default(now()) @db.Timestamptz(6)
+  angel_investor angel_investor? @relation(fields: [investor_uid], references: [uid], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model otps {
+  id          String      @id
+  userId      String      @unique
+  code        String
+  type        String
+  expiresAt   DateTime
+  createdAt   DateTime    @default(now())
+  angel_users angel_users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model startup_active {
+  uid                           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  company_name                  String?
+  hq_address                    String?
+  deal_amount                   String?
+  pitch1_description            String?
+  pitch2_description            String?
+  pitch3_description            String?
+  stack_1                       String?
+  stack_2                       String?
+  stack_3                       String?
+  stack_4                       String?
+  pitch1_link                   String?
+  pitch2_link                   String?
+  pitch3_link                   String?
+  pitch_deck                    String?
+  metric_1                      Json?   @db.Json
+  metric_2                      Json?   @db.Json
+  metric_3                      Json?   @db.Json
+  logo                          String?
+  metric_4                      String?
+  metric_5                      String?
+  metric_6                      String?
+  metric_7                      String?
+  website_url                   String?
+  comp_dis                      String?
+  thumb_url                     String?
+  metric_8                      String?
+  views                         String?
+  termsheet_notes               Json?   @db.Json
+  termsheet_safe                Json?   @db.Json
+  termsheet_equity              Json?   @db.Json
+  admin_founder_name            String?
+  admin_founder_profile_picture String?
+}
+
+model vc_administrative {
+  id          String      @id
+  uid         String
+  admin_uid   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now())
+  vc_partners vc_partners @relation(fields: [admin_uid], references: [id], onDelete: Cascade)
+  vc_firms    vc_firms    @relation(fields: [uid], references: [id], onDelete: Cascade)
+}
+
+model vc_associates {
+  id            String      @id
+  uid           String
+  associate_uid String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  vc_partners   vc_partners @relation(fields: [associate_uid], references: [id], onDelete: Cascade)
+  vc_firms      vc_firms    @relation(fields: [uid], references: [id], onDelete: Cascade)
+}
+
+model vc_documents {
+  id          String   @id
+  firm_uid    String
+  name        String
+  s3_key      String
+  url         String
+  type        String
+  size        Int
+  uploaded_by String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  vc_firms    vc_firms @relation(fields: [firm_uid], references: [id], onDelete: Cascade)
+}
+
+model vc_firms {
+  id                String              @id 
+  uid               String?              @unique @default(uuid()) @db.Uuid
+  email             String?             @unique
+  password          String?
+  firm_number       String?
+  firm_name         String?
+  firm_hq           String?
+  found_year        Int?
+  legal_structure   String?
+  url               String? // website
+  firm_admin        String? // full name
+  admin_email       String?
+  admin_phone       String?
+  admin_title       String?
+  firm_logo         String?
+  is_verified       Boolean?            @default(false)
+  created_at        DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime? @default(now()) @db.Timestamptz(6)
+
+  angel_users       angel_users[]
+  vc_administrative vc_administrative[]
+  vc_associates     vc_associates[]
+  vc_documents      vc_documents[]
+  vc_gp             vc_gp[]
+  vc_onboard_1      vc_onboard_1?
+  vc_onboard_2      vc_onboard_2?
+  vc_partners       vc_partners[]
+}
+
+model vc_gp {
+  id             String      @id
+  uid            String
+  gp_uid         String
+  deal_id        String?
+  deal_doc       String?
+  deal_termsheet String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @default(now())
+  vc_partners    vc_partners @relation(fields: [gp_uid], references: [id], onDelete: Cascade)
+  vc_firms       vc_firms    @relation(fields: [uid], references: [id], onDelete: Cascade)
+}
+
+model vc_onboard_1 {
+  id                String      @id
+  firm_name         String
+  entity_type       String
+  incorporation_add String
+  found_date        DateTime
+  aum               String
+  focus_stage       String
+  thesis            String
+  userId            String      @unique
+  firmId            String      @unique
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime
+  vc_firms          vc_firms    @relation(fields: [firmId], references: [id], onDelete: Cascade)
+  angel_users       angel_users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model vc_onboard_2 {
+  id          String      @id
+  full_name   String
+  dob         DateTime
+  nationality String
+  residence   String
+  title       String
+  linkedin    String
+  email       String
+  phone       String
+  userId      String      @unique
+  firmId      String      @unique
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime
+  vc_firms    vc_firms    @relation(fields: [firmId], references: [id], onDelete: Cascade)
+  angel_users angel_users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model vc_partners {
+  id                                               String              @id
+  firm_uid                                         String
+  role                                             String
+  partner_uid                                      String?
+  email                                            String
+  password                                         String?
+  full_name                                        String
+  phone                                            String
+  status                                           String              @default("pending")
+  angelUserId                                      String?
+  createdAt                                        DateTime            @default(now())
+  updatedAt                                        DateTime
+  vc_administrative                                vc_administrative[]
+  vc_associates                                    vc_associates[]
+  vc_gp                                            vc_gp[]
+  angel_users_vc_partners_angelUserIdToangel_users angel_users?        @relation("vc_partners_angelUserIdToangel_users", fields: [angelUserId], references: [id])
+  vc_firms                                         vc_firms            @relation(fields: [firm_uid], references: [id], onDelete: Cascade)
+  angel_users_vc_partners_partner_uidToangel_users angel_users?        @relation("vc_partners_partner_uidToangel_users", fields: [partner_uid], references: [id], onDelete: Cascade)
+}
+
+enum be_provider_enum {
+  heroku
+  azure
+  aws
+  gcp
+  vercel
+  netlify
+  render
+  railway
+  other
+}
+
+enum cicd_provider_enum {
+  github_actions
+  gitlab_ci
+  circleci
+  other
+}
+
+enum db_provider_enum {
+  postgres
+  mysql
+  mongodb_atlas
+  firestore
+  dynamodb
+  mssql
+  redis
+  sqlite
+}
+
+enum dealstatus {
+  pending
+  FINALIZED
+  CANCELLED
+}
+
+enum fe_provider_enum {
+  vercel
+  netlify
+  firebase_hosting
+  cloudflare_pages
+  github_pages
+  aws_amplify
+  other
+}
+
+enum instrumentselected {
+  SAFE
+  NOTES
+}
+
+enum sc_provider_enum {
+  github
+  gitlab
+  bitbucket
+  zip_upload
+}
+
+enum up_filetype_enum {
+  schema
+  er_diagram
+  chart
+  architecture_doc
+  other
+}

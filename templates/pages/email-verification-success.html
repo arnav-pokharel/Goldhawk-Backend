@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification Successful - {{APP_NAME}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 48px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #059669, #047857);
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            border: 3px solid #6ee7b7;
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse {
+            from {
+                transform: scale(1);
+            }
+            to {
+                transform: scale(1.05);
+            }
+        }
+        
+        .logo {
+            color: #10b981;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 32px;
+            letter-spacing: -0.5px;
+        }
+        
+        h1 {
+            color: #065f46;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        
+        .success-message {
+            color: #4b5563;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        
+        .user-info {
+            background: #f0fdf4;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+            border-left: 4px solid #10b981;
+        }
+        
+        .user-name {
+            color: #065f46;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .next-steps {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+            text-align: left;
+        }
+        
+        .next-steps-title {
+            color: #374151;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin: 12px 0;
+            padding: 8px 0;
+        }
+        
+        .step-number {
+            background: #10b981;
+            color: #ffffff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .action-buttons {
+            margin-top: 32px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 0 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -1px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-1px);
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        .security-note {
+            background: #fffbeb;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+        
+        .security-text {
+            color: #92400e;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .security-icon {
+            margin-right: 8px;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .success-icon {
+                width: 64px;
+                height: 64px;
+                font-size: 28px;
+            }
+            
+            .btn {
+                display: block;
+                margin: 8px 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">{{APP_NAME}}</div>
+        
+        <div class="success-icon">✅</div>
+        
+        <h1>Email Successfully Verified!</h1>
+        <p class="success-message">Your email address has been successfully verified and your account is now active.</p>
+        
+        <div class="user-info">
+            <div class="user-name">Welcome, {{FOUNDER_NAME}}!</div>
+        </div>
+        
+        <div class="next-steps">
+            <div class="next-steps-title">What's Next?</div>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-text">Complete your profile setup and company information</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-text">Complete identity verification to unlock all features</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-text">Start building your investment portfolio</div>
+            </div>
+        </div>
+        
+        <div class="security-note">
+            <div class="security-text">
+                <span class="security-icon">🔒</span>
+                Your account is now secure and ready to use. You can close this window.
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{{DASHBOARD_URL}}" class="btn btn-primary">Go to Dashboard</a>
+            <a href="{{LOGIN_URL}}" class="btn btn-secondary">Sign In</a>
+        </div>
+        
+        <div class="footer">
+            Need help? Contact us at {{SUPPORT_EMAIL}}
+        </div>
+    </div>
+</body>
+</html>

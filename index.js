@@ -26,7 +26,6 @@ const configuredOrigins =
         .map(origin => origin.trim())
         .filter(Boolean)
     : defaultOrigins;
-  : defaultOrigins;
 const allowedOrigins = configuredOrigins.length === 0 ? defaultOrigins : configuredOrigins;
 const allowAllOrigins = allowedOrigins.includes("*");
 

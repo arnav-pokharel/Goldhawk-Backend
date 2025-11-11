@@ -16,10 +16,16 @@ const defaultOrigins = [
   "http://localhost:3002",
   "http://localhost:3005",
   "http://localhost:9002",
+  "https://www.goldhawk-capital.com",
 ];
 
-const configuredOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(",").map(origin => origin.trim()).filter(Boolean)
+const configuredOrigins =
+  process.env.CORS_ORIGIN || process.env.CORS_ALLOWED_ORIGINS
+    ? (process.env.CORS_ORIGIN || process.env.CORS_ALLOWED_ORIGINS)
+        .split(",")
+        .map(origin => origin.trim())
+        .filter(Boolean)
+    : defaultOrigins;
   : defaultOrigins;
 const allowedOrigins = configuredOrigins.length === 0 ? defaultOrigins : configuredOrigins;
 const allowAllOrigins = allowedOrigins.includes("*");

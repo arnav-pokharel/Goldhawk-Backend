@@ -21,26 +21,43 @@ exports.signupFounder = async (req, res) => {
   email = email.split("?")[0].trim();
 
   try {
-    const existing = await pool.query("SELECT 1 FROM founders WHERE email = $1", [email]);
-    if (existing.rows.length > 0) {
-      return res.status(409).json({ error: "Email already registered. Please log in." });
-    }
+    const existing = await pool.query("SELECT uid, is_verified FROM founders WHERE email = $1", [email]);
 
     const hashed = await bcrypt.hash(password, 10);
     const otp = Math.floor(100000 + Math.random() * 900000);
-    const uid = uuidv4();
+    let uid = uuidv4();
+    let isResend = false;
 
-    await pool.query(
-      `INSERT INTO founders (
-        uid, email, password, otp, otp_expires_at, is_verified,
-        step1, step2, step3, created_at, updated_at
-      ) VALUES (
-        $1::uuid, $2::text, $3::text, $4::int,
-        NOW() + INTERVAL '10 minutes',
-        $5::boolean, $6::boolean, $7::boolean, $8::boolean, NOW(), NOW()
-      )`,
-      [uid, email, hashed, otp, false, false, false, false]
-    );
+    if (existing.rows.length > 0) {
+      const founder = existing.rows[0];
+      if (founder.is_verified) {
+        return res.status(409).json({ error: "Email already registered. Please log in." });
+      }
+
+      uid = founder.uid;
+      isResend = true;
+      await pool.query(
+        `UPDATE founders
+         SET password = $1,
+             otp = $2,
+             otp_expires_at = NOW() + INTERVAL '10 minutes',
+             updated_at = NOW()
+         WHERE uid = $3`,
+        [hashed, otp, uid]
+      );
+    } else {
+      await pool.query(
+        `INSERT INTO founders (
+          uid, email, password, otp, otp_expires_at, is_verified,
+          step1, step2, step3, created_at, updated_at
+        ) VALUES (
+          $1::uuid, $2::text, $3::text, $4::int,
+          NOW() + INTERVAL '10 minutes',
+          $5::boolean, $6::boolean, $7::boolean, $8::boolean, NOW(), NOW()
+        )`,
+        [uid, email, hashed, otp, false, false, false, false]
+      );
+    }
 
     let mailSent = false;
     if (transporter && typeof transporter.sendMail === "function" && transporter.isConfigured) {
@@ -62,16 +79,18 @@ exports.signupFounder = async (req, res) => {
       console.warn("[founder.signup] Mailer not configured; OTP email was not sent.");
     }
 
-    if (!mailSent) {
+    const allowDebugOtp =
+      process.env.EXPOSE_DEV_OTP === "true" || process.env.NODE_ENV !== "production";
+
+    if (!mailSent || allowDebugOtp) {
       console.info(`[founder.signup] OTP for ${email}: ${otp}`);
     }
 
-    const allowDebugOtp = process.env.EXPOSE_DEV_OTP === "true" || process.env.NODE_ENV !== "production";
-
     const payload = {
-      message: mailSent ? "OTP sent" : "OTP generated",
+      message: isResend ? "OTP resent" : mailSent ? "OTP sent" : "OTP generated",
       uid,
       mailSent,
+      resent: isResend,
     };
 
     if (!mailSent && allowDebugOtp) {
